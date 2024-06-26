@@ -54,15 +54,16 @@ def pop_equipment(user_response):
      
     # calculating overall tonnage based on the input time unit 
     time_unit = stem_paramters['payload_time_scale'].iloc[0]
-    match time_unit.lower():
-        case 'day':
-            tonne_per_day =  stem_paramters['target_payload'].iloc[0]
-        case 'week':
-            tonne_per_day =  stem_paramters['target_payload'].iloc[0] / 7
-        case 'month':
-            tonne_per_day =  stem_paramters['target_payload'].iloc[0] / 30.437     
-        case 'year':
-            tonne_per_day =  stem_paramters['target_payload'].iloc[0] / 365.2425   
+    if time_unit == 'day':
+        tonne_per_day = stem_paramters['target_payload'].iloc[0]
+    elif time_unit == 'week':
+        tonne_per_day = stem_paramters['target_payload'].iloc[0] / 7
+    elif time_unit == 'month':
+        tonne_per_day = stem_paramters['target_payload'].iloc[0] / 30.437
+    elif time_unit == 'year':
+        tonne_per_day = stem_paramters['target_payload'].iloc[0] / 365.2425
+    else:
+        raise ValueError(f"Unsupported time unit: {time_unit}")  
     
     # ultimate tonnage = tonnage per day x (total days + warm up days + cool down days )
     ultimate_target_tonne =  tonne_per_day * (time_in_days + stem_paramters['warmup_days'].iloc[0] + stem_paramters['cooldown_days'].iloc[0])
